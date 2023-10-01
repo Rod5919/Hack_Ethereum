@@ -9,6 +9,7 @@ import {
 import { read_from_ipfs, write_to_ipfs, DB } from "../db";
 import boom from "@hapi/boom";
 import { v4 as uuidv4 } from "uuid";
+import { hashPassword, comparePassword } from "../utils/auth/pass-hash";
 export class HospitalService {
   constructor() {}
 
@@ -21,14 +22,12 @@ export class HospitalService {
   }
 
   async create(hospital: CreateHospitalDTO): Promise<GetHospitalDTO | string> {
-    const data = await read_from_ipfs(DB.HOSPITALS);
-    if (!data) throw boom.notFound("No hay hospitales");
     const new_hospital: Hospital = {
       id: uuidv4(),
       ...hospital,
+      password: await hashPassword(hospital.password),
     };
-    data.push(new_hospital);
-    await write_to_ipfs(data, DB.HOSPITALS);
+    write_to_ipfs(new_hospital, DB.HOSPITALS);
     return new_hospital;
   }
 
@@ -38,7 +37,7 @@ export class HospitalService {
     const hospital_index = data.findIndex(
       (hospital: Hospital) =>
         hospital.username === hospital.username &&
-        hospital.password === hospital.password
+        comparePassword(hospital.password, hospital.password)
     );
     if (hospital_index === -1) throw boom.notFound("No existe el hospital");
     return {

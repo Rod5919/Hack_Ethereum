@@ -1,0 +1,89 @@
+Considering this file tree:
+.
+├── eslintrc.json
+├── package.json
+├── src
+│   ├── assets
+│   │   └── swagger.json
+│   ├── config
+│   │   └── index.ts
+│   ├── db
+│   │   ├── db_hospitals.json
+│   │   ├── db_users.json
+│   │   └── index.ts
+│   ├── dtos
+│   │   ├── hospital.dto.ts
+│   │   └── user.dto.ts
+│   ├── index.ts
+│   ├── middlewares
+│   │   ├── error.handler.ts
+│   │   └── validator.handler.ts
+│   ├── models
+│   │   ├── hospital.model.ts
+│   │   └── user.model.ts
+│   ├── routes
+│   │   ├── auth.routes.ts
+│   │   ├── hospital.routes.ts
+│   │   ├── index.ts
+│   │   └── user.routes.ts
+│   ├── schemas
+│   │   ├── hospital.schema.ts
+│   │   └── user.schema.ts
+│   ├── services
+│   │   ├── hospital.service.ts
+│   │   └── user.service.ts
+│   └── utils
+│       ├── auth
+│       │   ├── index.ts
+│       │   ├── pass-hash.ts
+│       │   └── strategies
+│       │       └── jwt.strategy.ts
+│       ├── db
+│       │   └── getTokenInfo.ts
+│       └── swagger.ts
+├── tsconfig.json
+└── yarn.lock
+
+I want to create a user and save it into the json file db_users.json. I am using this code (user.service.ts):
+
+async create(user: CreateUserDTO): Promise<GetUserDTO | string> {
+    const data = await read_from_ipfs(DB.USERS)??[];
+    const new_user: User = {
+      id: uuidv4(),
+      ...user,
+      password: await hashPassword(user.password),
+    };
+    data.push(new_user);
+    write_to_ipfs(data, DB.USERS);
+    return new_user;
+  }
+
+And this code in the db/index.ts file:
+
+import fs from 'fs';
+
+const dbUsersFile = './db_users.json';
+const dbHospitalFile = './db_hospitals.json';
+
+export enum DB {
+  USERS = "users",
+  HOSPITALS = "hospitals",
+}
+
+export const write_to_ipfs = (new_data: any, db: DB): void => {
+  try {
+    const dbFilePath = db === DB.USERS ? dbUsersFile : dbHospitalFile;
+    console.log(dbFilePath);
+    const data = fs.readFileSync(dbFilePath, 'utf-8');
+    const jsonData = JSON.parse(data);
+    jsonData[db] = { ...jsonData[db], ...new_data };
+    fs.writeFileSync(dbFilePath, JSON.stringify(jsonData, null, 2), 'utf-8');
+    console.log(`Data written to ${db} in the database.`);
+  } catch (error) {
+    console.error('Error writing to the database:', error);
+  }
+};
+
+But I am getting this error:
+
+Error reading from the database: Error: ENOENT: no such file or directory, open './db_users.json'

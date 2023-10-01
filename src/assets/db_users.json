@@ -1,0 +1,44 @@
+[
+  {
+    "id": "7efd63a1-6b32-4e6a-9bf5-85c3969b7e17",
+    "id_number": "123456789",
+    "name": "John Doe",
+    "password": "$2a$10$ZiKHzLjkuf.rDyEnextPMuEIVA2JVcjBfT7RVM4zjq9SK6zcfnwwO",
+    "insurance_entity": "SSU",
+    "blood_type": "A+",
+    "allergies": [],
+    "underlying_diseases": [
+      "Diabetes",
+      "Hypertension"
+    ],
+    "fingerprint": "123456789"
+  },
+  {
+    "id": "2f1714e4-cf1c-4004-a6ee-8929821a2a3e",
+    "id_number": "123456789",
+    "name": "John Doe",
+    "password": "$2a$10$uMmMCd2acgctLEnNyobNC.eBboRRtmZFftXo8MYlIMMJNJjtCNkSa",
+    "insurance_entity": "SSU",
+    "blood_type": "A+",
+    "allergies": [],
+    "underlying_diseases": [
+      "Diabetes",
+      "Hypertension"
+    ],
+    "fingerprint": "123456789"
+  },
+  {
+    "id": "d5a2ea0a-ba50-41ee-b220-b2be47e039e8",
+    "id_number": "123456789",
+    "name": "John Doe",
+    "password": "$2a$10$mXnZAWu6CY15h9tFrkFtguEjEJbfeTzs/ukAO9daw3FbmPWnLrC4e",
+    "insurance_entity": "SSU",
+    "blood_type": "A+",
+    "allergies": [],
+    "underlying_diseases": [
+      "Diabetes",
+      "Hypertension"
+    ],
+    "fingerprint": "123456789"
+  }
+]

@@ -29,15 +29,12 @@ export class UserService {
   }
 
   async create(user: CreateUserDTO): Promise<GetUserDTO | string> {
-    const data = await read_from_ipfs(DB.USERS);
-    if (!data) throw boom.notFound("No hay usuarios");
     const new_user: User = {
       id: uuidv4(),
       ...user,
       password: await hashPassword(user.password),
     };
-    data.push(new_user);
-    await write_to_ipfs(data, DB.USERS);
+    write_to_ipfs(new_user, DB.USERS);
     return new_user;
   }
 

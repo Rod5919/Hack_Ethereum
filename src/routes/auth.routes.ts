@@ -1,5 +1,4 @@
 import express from "express";
-import passport from "passport";
 
 import validatorHandler from "../middlewares/validator.handler";
 import { createUserSchema, loginUserSchema } from "../schemas/user.schema";
