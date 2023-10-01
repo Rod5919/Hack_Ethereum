@@ -12,7 +12,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
     async (req, res, next) => {
       try {
-        const { id_number } = await getTokenInfo(req.headers.authorization!) ?? req.body.id_number;
+        const { id_number } = await getTokenInfo(req.headers.authorization!) ?? req.query.id_number;
         res.status(200).send(await userService.get(id_number));
       } catch (err) {
         next(err);

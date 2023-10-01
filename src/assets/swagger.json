@@ -35,19 +35,8 @@
           },
           {
             "name": "user",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id_number": {
-                  "type": "string",
-                  "example": "123456",
-                  "description": "The id number of the user",
-                  "required": false,
-                  "minLength": 4
-                }
-              }
-            }
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -238,14 +227,14 @@
               "properties": {
                 "id_number": {
                   "type": "string",
-                  "example": "123456",
+                  "example": "123456789",
                   "description": "The id number of the user",
                   "required": true,
                   "minLength": 4
                 },
                 "password": {
                   "type": "string",
-                  "example": "123456",
+                  "example": "password123",
                   "description": "The password of the user",
                   "required": true,
                   "minLength": 4

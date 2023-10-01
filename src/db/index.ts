@@ -1,42 +1,34 @@
-import fs from 'fs';
-import path from 'path';
-
-const dbUsersFile = path.join(__dirname, '../assets/db_users.json');
-const dbHospitalFile = path.join(__dirname, '../assets/db_hospitals.json');
-
-console.log(__dirname);
-
-//const dbUsersFile = JSON.stringify(require('../assets/db_users.json')) ;
-//const dbHospitalFile = JSON.stringify(require('../assets/db_hospitals.json')) ;
-
-console.log(dbUsersFile)
+import * as IPFS from "ipfs-core";
+import { config } from "../config";
 
 export enum DB {
   USERS = "users",
   HOSPITALS = "hospitals",
 }
 
-export const read_from_ipfs = (db: DB): any => {
-  try {
-    const data = fs.readFileSync(db === DB.USERS ? dbUsersFile : dbHospitalFile, 'utf-8');
-    const jsonData = JSON.parse(data);
-    return jsonData[db] || null;
-  } catch (error) {
-    console.error('Error reading from the database:', error);
-    return null;
-  }
+export const read_from_ipfs = async (db: DB) => {
+  const ipfs = await IPFS.create();
+  const cid =
+      db === DB.USERS ? config.cid_ipfs_users : config.cid_ipfs_hospitals;
+  if (!cid) return null;
+  const data = await ipfs.cat(cid);
+  return JSON.parse(data.toString());
 };
 
-export const write_to_ipfs = (new_data: any, db: DB): void => {
-  try {
-    const dbFilePath = db === DB.USERS ? dbUsersFile : dbHospitalFile;
-    console.log(dbFilePath);
-    const data = fs.readFileSync(dbFilePath, 'utf-8');
-    const jsonData = JSON.parse(data);
-    jsonData.push(new_data);
-    fs.writeFileSync(dbFilePath, JSON.stringify(jsonData, null, 2), 'utf-8');
-    console.log(`Data written to ${db} in the database.`);
-  } catch (error) {
-    console.error('Error writing to the database:', error);
-  }
+// Write
+export const write_to_ipfs = async (new_data: any, db: DB) => {
+  const ipfs = await IPFS.create();
+  const cid =
+      db === DB.USERS ? config.cid_ipfs_users : config.cid_ipfs_hospitals;
+  if (!cid) return null;
+  const data = read_from_ipfs(db);
+  if (data) new_data = { ...data, ...new_data };
+  if (db === DB.USERS)
+    config.cid_ipfs_users = await ipfs
+        .add(JSON.stringify(new_data))
+        .then((res) => res.cid.toString());
+  if (db === DB.HOSPITALS)
+    config.cid_ipfs_hospitals = await ipfs
+        .add(JSON.stringify(new_data))
+        .then((res) => res.cid.toString());
 };
