@@ -10,6 +10,8 @@ import { read_from_ipfs, write_to_ipfs, DB } from "../db";
 import boom from "@hapi/boom";
 import { v4 as uuidv4 } from "uuid";
 import { hashPassword, comparePassword } from "../utils/auth/pass-hash";
+import jwt from "jsonwebtoken";
+
 export class HospitalService {
   constructor() {}
 
@@ -21,14 +23,21 @@ export class HospitalService {
     return hospital;
   }
 
-  async create(hospital: CreateHospitalDTO): Promise<GetHospitalDTO | string> {
+  async create(hospital: CreateHospitalDTO): Promise<AuthHospitalDTO | string> {
     const new_hospital: Hospital = {
       id: uuidv4(),
       ...hospital,
       password: await hashPassword(hospital.password),
     };
     write_to_ipfs(new_hospital, DB.HOSPITALS);
-    return new_hospital;
+    const token = jwt.sign(
+      { id: new_hospital.id },
+      process.env.JWT_SECRET as string
+    );
+    return {
+      id: new_hospital.id,
+      token,
+    };
   }
 
   async login(hospital: LoginHospitalDTO): Promise<AuthHospitalDTO | string> {
@@ -40,9 +49,13 @@ export class HospitalService {
         comparePassword(hospital.password, hospital.password)
     );
     if (hospital_index === -1) throw boom.notFound("No existe el hospital");
+    const token = jwt.sign(
+      { id: data[hospital_index].id },
+      process.env.JWT_SECRET as string
+    );
     return {
       id: data[hospital_index].id,
-      token: "token",
+      token
     };
   }
 }

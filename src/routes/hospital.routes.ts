@@ -29,24 +29,4 @@ router.get(
   }
 );
 
-router.post(
-  "/:id",
-  validatorHandler(createHospitalSchema, "params"),
-  passport.authenticate("jwt", { session: false }),
-  async (req, res, next) => {
-    try {
-      res.status(201).send(await hospitalService.create(
-        {
-          name: req.body.name,
-          username: req.body.username,
-          password: req.body.password,
-        }
-      ));
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-
-
 export default router;

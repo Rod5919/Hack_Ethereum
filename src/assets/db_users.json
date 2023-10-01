@@ -40,5 +40,39 @@
       "Hypertension"
     ],
     "fingerprint": "123456789"
+  },
+  {
+    "id": "5e696c64-74f2-47db-8c41-0116d2f269aa",
+    "id_number": "123456",
+    "name": "John Doe",
+    "password": "$2a$10$JjMzgIDyJWh0l4EZVWlcEeVDr0FaXeRvBvnIZgY/GZdJoyvC/r78G",
+    "insurance_entity": "123456",
+    "blood_type": "A-",
+    "allergies": [
+      "allergy1",
+      "allergy2"
+    ],
+    "underlying_diseases": [
+      "disease1",
+      "disease2"
+    ],
+    "fingerprint": "123456"
+  },
+  {
+    "id": "bac8afa4-c3c8-4d41-95e5-add72fd24766",
+    "id_number": "123456",
+    "name": "John Doe",
+    "password": "$2a$10$ue1RWtHd6McfPnqQpXv9VO.UFfuDTxLKdlx10I.YVuBu016.3M43S",
+    "insurance_entity": "123456",
+    "blood_type": "A-",
+    "allergies": [
+      "allergy1",
+      "allergy2"
+    ],
+    "underlying_diseases": [
+      "disease1",
+      "disease2"
+    ],
+    "fingerprint": "123456"
   }
 ]

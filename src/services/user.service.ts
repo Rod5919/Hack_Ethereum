@@ -18,24 +18,32 @@ export class UserService {
   constructor() {}
 
   async get(
-    id: User["id"]
+    id_number: User["id_number"] | undefined
   ): Promise<GetUserDTO | string> {
+    if (!id_number) throw boom.badRequest("No se ha enviado el carnet de identidad");
     const data = await read_from_ipfs(DB.USERS);
-    if (!data) throw boom.notFound("No hay usuarios");
-    const user = data.find((user: User) => user.id === id) as User;
+    if (!data) throw boom.notFound("No existe el usuario");
+    const user = data.find((user: User) => user.id_number === id_number) as User;
     if (!user) throw boom.notFound("No existe el usuario");
     const { password, ...userData } = user;
     return userData;
   }
 
-  async create(user: CreateUserDTO): Promise<GetUserDTO | string> {
+  async create(user: CreateUserDTO): Promise<AuthUserDTO | string> {
     const new_user: User = {
       id: uuidv4(),
       ...user,
       password: await hashPassword(user.password),
     };
     write_to_ipfs(new_user, DB.USERS);
-    return new_user;
+    const token = jwt.sign(
+      { id: new_user.id, id_number: new_user.id_number },
+      config.jwt_secret as string,
+    );
+    return { 
+      id: new_user.id,
+      token
+    };
   }
 
   async login(user: LoginUserDTO): Promise<AuthUserDTO | string> {
@@ -55,6 +63,6 @@ export class UserService {
       { id: user_data.id, id_number: user_data.id_number },
       config.jwt_secret as string,
     );
-    return { ...user_data, token };
+    return { id: user_data.id, token };
   }
 }
