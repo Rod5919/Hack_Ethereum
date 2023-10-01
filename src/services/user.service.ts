@@ -1,35 +1,62 @@
 import { User } from "../models/user.model";
-import { GetUserDTO, DeleteUserDTO, UpdateUserDTO, CreateUserDTO, LoginUserDTO, AuthUserDTO } from "../dtos/user.dto";
+import {
+  GetUserDTO,
+  CreateUserDTO,
+  LoginUserDTO,
+  AuthUserDTO,
+} from "../dtos/user.dto";
 
 import { hashPassword } from "../utils/auth/pass-hash";
 import { comparePassword } from "../utils/auth/pass-hash";
 import { config } from "../config";
 
+import { read_from_ipfs, write_to_ipfs, DB } from "../db";
 import jwt from "jsonwebtoken";
 import boom from "@hapi/boom";
 export class UserService {
   constructor() {}
 
-  async getUser(id : User["id"], id_number : User["id_number"]) : Promise<GetUserDTO | string> { 
-    return "hola mundo";
-  }
-
-  async updateUser(
-    id: number,
-    user: UpdateUserDTO
+  async get(
+    id: User["id"]
   ): Promise<GetUserDTO | string> {
-    return "hola mundo";
+    const data = await read_from_ipfs(DB.USERS);
+    if (!data) throw boom.notFound("No hay usuarios");
+    const user = data.find((user: User) => user.id === id) as User;
+    if (!user) throw boom.notFound("No existe el usuario");
+    const { password, ...userData } = user;
+    return userData;
   }
 
-  async deleteUser(id: User["id"]): Promise<DeleteUserDTO | string> {
-    return "hola mundo";
+  async create(user: CreateUserDTO): Promise<GetUserDTO | string> {
+    const data = await read_from_ipfs(DB.USERS);
+    if (!data) throw boom.notFound("No hay usuarios");
+    const new_user: User = {
+      id: data.length + 1,
+      ...user,
+      password: await hashPassword(user.password),
+    };
+    data.push(new_user);
+    await write_to_ipfs(data, DB.USERS);
+    return new_user;
   }
 
-  async createUser(user: CreateUserDTO): Promise< GetUserDTO| string> {
-    return "hola mundo";
-  }
-
-  async loginUser(user: LoginUserDTO): Promise<AuthUserDTO | string> {
-    return "hola mundo";
+  async login(user: LoginUserDTO): Promise<AuthUserDTO | string> {
+    const data = await read_from_ipfs(DB.USERS);
+    if (!data) throw boom.notFound("No hay usuarios");
+    const user_index = data.findIndex(
+      (user: User) => user.id_number === user.id_number
+    );
+    if (user_index === -1) throw boom.notFound("No existe el usuario");
+    const user_data = data[user_index];
+    const password_match = await comparePassword(
+      user.password,
+      user_data.password
+    );
+    if (!password_match) throw boom.unauthorized("Contraseña incorrecta");
+    const token = jwt.sign(
+      { id: user_data.id, id_number: user_data.id_number },
+      config.jwt_secret as string,
+    );
+    return { ...user_data, token };
   }
 }

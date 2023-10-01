@@ -7,7 +7,7 @@ import { User } from "../../models/user.model";
 import { config } from "../../config";
 
 const getId = async (token: string) : Promise<User["id"]> => {
-    const payload: JwtPayload = jwt.verify(token?.split(" ")[1] as string, config.jwtSecret as string) as JwtPayload;
+    const payload: JwtPayload = jwt.verify(token?.split(" ")[1] as string, config.jwt_secret as string) as JwtPayload;
     if (!payload) throw Boom.unauthorized("Invalid token");
 
     return payload.id;

@@ -15,11 +15,12 @@ export const createHospitalSchema = Joi.object({
     password: password.required(),
 });
 
-export const deleteHospitalSchema = Joi.object({
-    id: id.required(),
+export const loginHospitalSchema = Joi.object({
+    username: username.required(),
+    password: password.required(),
 });
 
-export const contactSchema = Joi.object({
+export const hospitalSchema = Joi.object({
     id: id,
     name: name,
 });

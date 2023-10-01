@@ -29,22 +29,6 @@ export class CreateHospitalDTO implements ICreateHospitalDTO {
     password: string;
 }
 
-export interface DeleteHospitalDTO extends Omit<Hospital, "createdAt"> {}
-
-export interface IUpdateHospitalDTO extends Pick<Hospital, "name"> {}
-
-export class UpdateHospitalDTO implements IUpdateHospitalDTO {
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(1)
-    id: number;
-
-    @IsNotEmpty()
-    @IsString()
-    @Length(3, 50)
-    name: string;
-}
-
 export interface ILoginHospitalDTO extends Pick<Hospital, "username" | "password"> {}
 
 export class LoginHospitalDTO implements ILoginHospitalDTO {

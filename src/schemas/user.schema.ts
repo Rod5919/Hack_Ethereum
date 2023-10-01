@@ -25,18 +25,6 @@ export const getUserSchema = Joi.object({
     id: id.required(),
 });
 
-export const updateUserSchema = Joi.object({
-    id: id.required(),
-    insurance_entity: insurance_entity,
-    blood_type: blood_type,
-    allergies: allergies,
-    underlying_diseases: underlying_diseases,
-});
-
-export const deleteUserSchema = Joi.object({
-    id: id.required(),
-});
-
 export const loginUserSchema = Joi.object({
     username: id_number.required(),
     password: password.required(),

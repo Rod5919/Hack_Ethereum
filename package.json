@@ -1,9 +1,24 @@
 {
-  "name": "get-started-with-js-ipfs",
+  "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc && cp -r src/assets/ dist/assets/",
+    "migrations:generate": "sequelize-cli migration:generate --name",
+    "migrations:run": "sequelize-cli db:migrate",
+    "migrations:undo": "sequelize-cli db:migrate:undo",
+    "migrations:drop": "sequelize-cli db:migrate:undo:all",
+    "sequelize:init": "sequelize-cli init",
+    "swagger": "npx ts-node ./src/utils/swagger.ts",
+    "test_sample": "node src/sample.js"
+  },
+  "keywords": [],
+  "author": "Sergio Rodrigo Fernandez Testa",
+  "license": "ISC",
   "devDependencies": {
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
@@ -15,7 +30,6 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "ipfs-core": "^0.16.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.15",
     "@types/node": "^18.11.18",
@@ -34,6 +48,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "form-data": "^4.0.0",
+    "ipfs-core": "^0.16.0",
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
     "passport": "^0.6.0",
@@ -47,11 +62,5 @@
     "swagger-ui-express": "^4.6.0",
     "typescript": "^5.0.4",
     "ws": "^8.13.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
-  },
-  "author": "",
-  "license": "MIT"
+  }
 }
