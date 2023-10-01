@@ -2,8 +2,6 @@ import { Hospital } from "../models/hospital.model";
 
 import {
     IsNotEmpty,
-    IsNumber,
-    Min,
     IsString,
     Length,
 } from "class-validator";

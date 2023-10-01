@@ -9,6 +9,7 @@ import {
 import { hashPassword } from "../utils/auth/pass-hash";
 import { comparePassword } from "../utils/auth/pass-hash";
 import { config } from "../config";
+import { v4 as uuidv4 } from "uuid";
 
 import { read_from_ipfs, write_to_ipfs, DB } from "../db";
 import jwt from "jsonwebtoken";
@@ -31,7 +32,7 @@ export class UserService {
     const data = await read_from_ipfs(DB.USERS);
     if (!data) throw boom.notFound("No hay usuarios");
     const new_user: User = {
-      id: data.length + 1,
+      id: uuidv4(),
       ...user,
       password: await hashPassword(user.password),
     };

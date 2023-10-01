@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const id = Joi.number().integer().min(1);
+const id = Joi.string().uuid();
 const id_number =  Joi.string().min(3).max(50);
 const name = Joi.string().min(3).max(50);
 const password = Joi.string().min(3).max(50);

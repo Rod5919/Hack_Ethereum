@@ -8,6 +8,7 @@ import {
 
 import { read_from_ipfs, write_to_ipfs, DB } from "../db";
 import boom from "@hapi/boom";
+import { v4 as uuidv4 } from "uuid";
 export class HospitalService {
   constructor() {}
 
@@ -23,7 +24,7 @@ export class HospitalService {
     const data = await read_from_ipfs(DB.HOSPITALS);
     if (!data) throw boom.notFound("No hay hospitales");
     const new_hospital: Hospital = {
-      id: data.length + 1,
+      id: uuidv4(),
       ...hospital,
     };
     data.push(new_hospital);

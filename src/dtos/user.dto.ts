@@ -4,8 +4,6 @@ import {
     IsNotEmpty,
     IsString,
     Length,
-    IsNumber,
-    Min,
 } from "class-validator";
 
 export interface GetUserDTO extends Pick<User, "id_number" | "name" | "insurance_entity" | "blood_type" | "allergies" | "underlying_diseases" | "fingerprint"> {}
